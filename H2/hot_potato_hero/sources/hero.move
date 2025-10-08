@@ -29,7 +29,7 @@ public struct LevelUpgradePolicy has key {
     treasury: Balance<SUI>,
 }
 
-public struct Hero has key {
+public struct Hero has key, store {
     id: UID,
     name: String,
     level: u16,

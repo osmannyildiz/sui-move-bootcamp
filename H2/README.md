@@ -17,7 +17,7 @@ Key features:
 - Demonstrates how store managers must hold the correct `AdminCap` object
 - Implements property-based access control
 
-This pattern builds on top of the simple Capability Pattern that solely relies on Sui object ownership model and builds a more fine grained authorization mechanism using arbitrary proeprties declaerd on the Cap oject.
+This pattern builds on top of the simple Capability Pattern that solely relies on Sui object ownership model and builds a more fine grained authorization mechanism using arbitrary properties declared on the Cap oject.
 
 ## 2. Witness Pattern
 

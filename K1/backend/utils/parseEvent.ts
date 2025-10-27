@@ -4,7 +4,7 @@ import { bcs } from "@mysten/sui/bcs";
 const USER_REGISTERED_EVENT_BCS = bcs.struct("UserRegistered", {
   owner: bcs.Address,
   name: bcs.string(),
-  users_id: bcs.u64(),
+  user_id: bcs.u64(),
 });
 
 export const decodeBcsEvent = (event: any): any => {
@@ -16,6 +16,6 @@ export const decodeBcsEvent = (event: any): any => {
   return {
     owner: decoded.owner,
     name: decoded.name,
-    users_id: decoded.users_id.toString(),
+    user_id: decoded.user_id.toString(),
   };
 };

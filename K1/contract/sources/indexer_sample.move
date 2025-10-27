@@ -9,7 +9,7 @@ public struct UsersCounter has key {
 public struct UserRegistered has copy, drop {
     owner: address,
     name: String,
-    users_id: u64,
+    user_id: u64,
 }
 
 fun init(ctx: &mut TxContext) {
@@ -25,7 +25,7 @@ public fun register_user(name: String, users_counter: &mut UsersCounter, ctx: &m
     let user_registered = UserRegistered {
         owner: tx_context::sender(ctx),
         name,
-        users_id: users_counter.count,
+        user_id: users_counter.count,
     };
     event::emit(user_registered);
 }

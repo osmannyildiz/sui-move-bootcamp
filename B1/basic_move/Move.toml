@@ -19,6 +19,7 @@ edition = "2024.beta" # edition = "legacy" to use legacy (pre-2024) Move
 
 [addresses]
 basic_move = "0x0"
+osman = "0x56c0e9057f33f5521585eea98cc5605f2beb304590fe59e1c493149482f146c5"
 
 # Named addresses will be accessible in Move as `@name`. They're also exported:
 # for example, `std = "0x1"` is exported by the Standard Library.

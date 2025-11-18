@@ -11,20 +11,30 @@ public struct AdminCap has key {
 }
 
 fun init(ctx: &mut TxContext) {
-    // create a new AdminCap
+    let admin_cap = AdminCap {
+        id: object::new(ctx),
+    };
 
-    // transfer the AdminCap to the publisher wallet
+    transfer::transfer(admin_cap, ctx.sender());
 }
 
 public fun create_hero(_: &AdminCap, name: String, ctx: &mut TxContext): Hero {
-    // create a new Hero resource
+    Hero {
+        id: object::new(ctx),
+        name,
+    }
 }
 
 public fun transfer_hero(_: &AdminCap, hero: Hero, to: address) {
-    // transfer the Hero resource to the user
+    transfer::transfer(hero, to);
 }
 
 public fun new_admin(_: &AdminCap, to: address, ctx: &mut TxContext) {
+    let admin_cap = AdminCap {
+        id: object::new(ctx),
+    };
+
+    transfer::transfer(admin_cap, to);
 }
 
 // ===== TEST ONLY =====

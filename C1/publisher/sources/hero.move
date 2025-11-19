@@ -9,20 +9,33 @@ module publisher::hero {
         name: String,
     }
 
-    fun init(ctx: &mut TxContext) {
+    // One-Time Witness
+    public struct HERO has drop {}
+
+    fun init(otw: HERO, ctx: &mut TxContext) {
         // create Publisher and transfer it to the publisher wallet
+        // let publisher = package::claim(otw, ctx);
+        // transfer::public_transfer(publisher, ctx.sender());
+        package::claim_and_keep(otw, ctx);
     }
 
     public fun create_hero(publisher: &Publisher, name: String, ctx: &mut TxContext): Hero {
         // verify that publisher is from the same module
+        assert!(publisher.from_module<HERO>(), EWrongPublisher);
 
         // create Hero resource
+        Hero {
+            id: object::new(ctx),
+            name
+        }
     }
 
     public fun transfer_hero(publisher: &Publisher, hero: Hero, to: address) {
         // verify that publisher is from the same module
+        assert!(publisher.from_module<HERO>(), EWrongPublisher);
 
         // transfer the Hero resource to the user
+        transfer::transfer(hero, to);
     }
 
     // ===== TEST ONLY =====
@@ -77,7 +90,27 @@ module publisher::hero {
 
     #[test]
     fun test_admin_can_transfer_hero() {
-        // TODO: Implement test
+        let mut ts = ts::begin(ADMIN);
+        init(HERO {}, ts.ctx());
+        ts.next_tx(ADMIN);
+
+        // let publisher = ts.take_from_sender<Publisher>();
+        let publisher = ts.take_from_address<Publisher>(ADMIN);
+
+        let hero = create_hero(&publisher, b"Veli Hoca".to_string(), ts.ctx());
+        transfer_hero(&publisher, hero, USER);
+
+        // == Option 1
+        ts.next_tx(ADMIN);
+        assert!(ts::has_most_recent_for_address<Hero>(USER)); // Could be done as USER, doesn't matter here
+        
+        // == Option 2
+        // ts.next_tx(USER);
+        // assert!(ts::has_most_recent_for_sender<Hero>(&ts));
+        // ts.next_tx(ADMIN);
+
+        ts.return_to_sender(publisher); // Can only be done as ADMIN
+        ts.end();
     }
 }
 

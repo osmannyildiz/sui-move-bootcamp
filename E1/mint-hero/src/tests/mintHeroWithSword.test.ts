@@ -1,7 +1,7 @@
 import { SuiTransactionBlockResponse } from "@mysten/sui/client";
+import { getHeroSwordIds } from "../helpers/getHeroSwordIds";
 import { mintHeroWithSword } from "../helpers/mintHeroWithSword";
 import { parseCreatedObjectsIds } from "../helpers/parseCreatedObjectsIds";
-import { getHeroSwordIds } from "../helpers/getHeroSwordIds";
 import { suiClient } from "../suiClient";
 
 describe("Mint a Hero NFT and equip a Sword", () => {
@@ -24,10 +24,13 @@ describe("Mint a Hero NFT and equip a Sword", () => {
   });
 
   test("Created Hero and Sword", async () => {
+    console.log("== Object Changes: ", txResponse.objectChanges);
     expect(txResponse.objectChanges).toBeDefined();
     const { heroesIds, swordsIds } = parseCreatedObjectsIds({
       objectChanges: txResponse.objectChanges!,
     });
+    console.log("== Heroes IDs: ", heroesIds);
+    console.log("== Swords IDs: ", swordsIds);
     expect(heroesIds.length).toBe(1);
     expect(swordsIds.length).toBe(1);
     heroId = heroesIds[0];

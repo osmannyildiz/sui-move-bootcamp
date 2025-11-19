@@ -1,9 +1,9 @@
+import { SuiTransactionBlockResponse } from "@mysten/sui/client";
 import { MIST_PER_SUI } from "@mysten/sui/utils";
 import { ENV } from "../env";
-import { transferSUI } from "../helpers/transferSUI";
-import { parseBalanceChanges } from "../helpers/parseBalanceChanges";
 import { getAddress } from "../helpers/getAddress";
-import { SuiTransactionBlockResponse } from "@mysten/sui/client";
+import { parseBalanceChanges } from "../helpers/parseBalanceChanges";
+import { transferSUI } from "../helpers/transferSUI";
 
 const AMOUNT = 0.01 * Number(MIST_PER_SUI);
 
@@ -25,6 +25,7 @@ describe("Transfer SUI amount", () => {
   });
 
   test("SUI Balance Changes", () => {
+    console.log("== Balance Changes: ", txResponse.balanceChanges);
     expect(txResponse.balanceChanges).toBeDefined();
     const balanceChanges = parseBalanceChanges({
       balanceChanges: txResponse.balanceChanges!,

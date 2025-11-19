@@ -1,10 +1,17 @@
 module hero::hero;
+
+// === Imports ===
+
 use hero::blacksmith::Sword;
 use std::string::String;
 use sui::dynamic_field as df;
 use sui::dynamic_object_field as dof;
 
+// === Errors ===
+
 const EAlreadyEquipedSword: u64 = 1;
+
+// === Structs ===
 
 /// Hero NFT
 public struct Hero has key, store {
@@ -12,6 +19,8 @@ public struct Hero has key, store {
     health: u64,
     stamina: u64,
 }
+
+// === Public Functions ===
 
 /// Anyone can mint a hero.
 /// Hero starts with 100 heath and 10 stamina.
@@ -32,6 +41,8 @@ public fun equip_sword(self: &mut Hero, sword: Sword) {
     self.add_dof(b"sword".to_string(), sword)
 }
 
+// === View Functions ===
+
 public fun health(self: &Hero): u64 {
     self.health
 }
@@ -46,10 +57,14 @@ public fun sword(self: &Hero): &Sword {
     dof::borrow(&self.id, b"sword")
 }
 
+// === Package Functions ===
+
 /// Generic add dynamic object field to the hero.
 fun add_dof<T: key + store>(self: &mut Hero, name: String, value: T) {
     dof::add(&mut self.id, name, value)
 }
+
+// === Test Functions ===
 
 #[test_only]
 public fun uid_mut_for_testing(self: &mut Hero): &mut UID {

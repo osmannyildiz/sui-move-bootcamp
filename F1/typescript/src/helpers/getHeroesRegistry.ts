@@ -11,9 +11,25 @@ interface HeroesRegistry {
  * We need to get the Hero Registry object, and return the contents of the ids vector, along with the counter field.
  */
 export const getHeroesRegistry = async (): Promise<HeroesRegistry> => {
-  // TODO: Implement this function
+  const registry = await suiClient.getObject({
+    id: ENV.HEROES_REGISTRY_ID,
+    options: {
+      showContent: true,
+    },
+  });
+
+  const content = registry.data?.content as Extract<
+    SuiParsedData,
+    { dataType: "moveObject" }
+  >;
+
+  const fields = content.fields as {
+    ids: string[];
+    counter: string;
+  };
+
   return {
-    ids: [],
-    counter: 0,
+    ids: fields.ids,
+    counter: parseInt(fields.counter),
   };
 };

@@ -1,9 +1,9 @@
 import { SuiTransactionBlockResponse } from "@mysten/sui/client";
+import { getHeroesRegistry } from "../helpers/getHeroesRegistry";
+import { getWeaponIdOfHero } from "../helpers/getWeaponIdOfHero";
 import { mintHeroWithWeapon } from "../helpers/mintHeroWithWeapon";
 import { parseCreatedObjectsIds } from "../helpers/parseCreatedObjectIds";
 import { suiClient } from "../suiClient";
-import { getWeaponIdOfHero } from "../helpers/getWeaponIdOfHero";
-import { getHeroesRegistry } from "../helpers/getHeroesRegistry";
 
 describe("Mint a Hero NFT, a Weapon NFT and equip it", () => {
   let txResponse: SuiTransactionBlockResponse;
@@ -12,7 +12,10 @@ describe("Mint a Hero NFT, a Weapon NFT and equip it", () => {
 
   beforeAll(async () => {
     txResponse = await mintHeroWithWeapon();
-    await suiClient.waitForTransaction({ digest: txResponse.digest, timeout: 5_000 });
+    await suiClient.waitForTransaction({
+      digest: txResponse.digest,
+      timeout: 5_000,
+    });
     console.log("Executed transaction with txDigest:", txResponse.digest);
   });
 
@@ -23,6 +26,7 @@ describe("Mint a Hero NFT, a Weapon NFT and equip it", () => {
 
   test("Created Hero", async () => {
     expect(txResponse.objectChanges).toBeDefined();
+    console.log("== Object Changes: ", txResponse.objectChanges);
     const { heroesIds } = parseCreatedObjectsIds({
       objectChanges: txResponse.objectChanges!,
     });

@@ -1,4 +1,4 @@
-import { SuiObjectChange, SuiObjectChangeCreated } from "@mysten/sui/client";
+import { SuiObjectChange } from "@mysten/sui/client";
 import { ENV } from "../env";
 
 interface Args {
@@ -14,8 +14,14 @@ interface Response {
  * Extracts the IDs of the created Heroes and Weapons NFTs, filtering by objectType.
  */
 export const parseCreatedObjectsIds = ({ objectChanges }: Args): Response => {
-  // TODO: Implement the function
+  const createdObjects = objectChanges.filter(
+    (change) => change.type === "created"
+  );
+  const heroes = createdObjects.filter(
+    (change) => change.objectType === `${ENV.PACKAGE_ID}::hero::Hero`
+  );
+  const heroesIds = heroes.map((hero) => hero.objectId);
   return {
-    heroesIds: [],
+    heroesIds,
   };
 };

@@ -53,3 +53,6 @@ public fun defence(self: &Shield): u64 {
     self.defence
 }
 
+public fun expertise(self: &Blacksmith): u64 {
+    self.expertise
+}

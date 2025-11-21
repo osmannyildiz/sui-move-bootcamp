@@ -5,12 +5,18 @@ use std::string::String;
 use sui::dynamic_field as df;
 use sui::dynamic_object_field as dof;
 use sui::package;
+use sui::coin::Coin;
+use sui::sui::SUI;
 
 use package_upgrade::blacksmith::{Shield, Sword};
 use package_upgrade::version::Version;
 
+const HERO_PRICE: u64 = 100_000_000; // 0.1 SUI
+
 const EAlreadyEquipedShield: u64 = 0;
 const EAlreadyEquipedSword: u64 = 1;
+const EUseMintHeroV2Instead: u64 = 2;
+const EInvalidPrice: u64 = 3;
 
 public struct HERO() has drop;
 
@@ -26,19 +32,26 @@ fun init(otw: HERO, ctx: &mut TxContext) {
 }
 
 /// Anyone can mint a hero.
-/// Hero starts with 100 heath and 10 stamina.
-public fun mint_hero(version: &Version, ctx: &mut TxContext): Hero {
-    version.check_is_valid();
-    Hero {
-        id: object::new(ctx),
-        health: 100,
-        stamina: 10
-    }
+/// Hero starts with 100 health and 10 stamina.
+public fun mint_hero(_version: &Version) {
+    abort(EUseMintHeroV2Instead)
 }
 
-// Task: Implement mint_hero_v2 that accepts payment
-// public fun mint_hero_v2(version: &Version, payment: Coin<SUI>, ctx: &mut TxContext): Hero {
-// }
+public fun mint_hero_v2(version: &Version, payment: Coin<SUI>, ctx: &mut TxContext): Hero {
+    version.check_is_valid();
+
+    assert!(payment.value() == HERO_PRICE, EInvalidPrice);
+
+    let hero = Hero {
+        id: object::new(ctx),
+        health: 100,
+        stamina: 20,
+    };
+
+    transfer::public_transfer(payment, @PAYMENT_RECEIVER);
+
+    hero
+}
 
 /// Hero can equip a single sword.
 public fun equip_sword(self: &mut Hero, version: &Version, sword: Sword) {

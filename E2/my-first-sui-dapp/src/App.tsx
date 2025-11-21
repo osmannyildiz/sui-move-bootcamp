@@ -1,5 +1,6 @@
 import { ConnectButton } from "@mysten/dapp-kit";
 import { Box, Container, Flex, Heading } from "@radix-ui/themes";
+import { MintNFTButton } from "./MintNFTButton";
 import { WalletStatus } from "./WalletStatus";
 
 function App() {
@@ -22,7 +23,10 @@ function App() {
           <ConnectButton />
         </Box>
       </Flex>
+
       <Container>
+        <MintNFTButton />
+
         <Container
           mt="5"
           pt="2"

@@ -1,5 +1,6 @@
 import { useCurrentAccount, useSuiClientQuery } from "@mysten/dapp-kit";
 import { Flex, Heading, Text } from "@radix-ui/themes";
+import { PACKAGE_ID } from "./config";
 
 export function OwnedObjects() {
   const account = useCurrentAccount();
@@ -7,6 +8,10 @@ export function OwnedObjects() {
     "getOwnedObjects",
     {
       owner: account?.address as string,
+      filter: {
+        // StructType: "0x2::coin::Coin<0x2::sui::SUI>",
+        StructType: `${PACKAGE_ID}::hero::Hero`,
+      },
     },
     {
       enabled: !!account,
@@ -30,7 +35,9 @@ export function OwnedObjects() {
       {data.data.length === 0 ? (
         <Text>No objects owned by the connected wallet</Text>
       ) : (
-        <Heading size="4">Objects owned by the connected wallet</Heading>
+        <Heading size="4">
+          Objects owned by the connected wallet ({data.data.length})
+        </Heading>
       )}
       {data.data.map((object) => (
         <Flex key={object.data?.objectId}>

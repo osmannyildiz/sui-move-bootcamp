@@ -14,15 +14,29 @@ public struct Hero has key, store {
 fun init(otw: HERO, ctx: &mut TxContext) {
     let publisher = package::claim(otw, ctx);
 
-    // setup the display
+    let keys = vector[b"name".to_string(), b"image_url".to_string(), b"description".to_string()];
+    let values = vector[
+        b"Hero: {name}".to_string(),
+        b"https://aggregator.walrus-testnet.walrus.space/v1/blobs/{blob_id}".to_string(),
+        b"Oyleyse {name} icin bir alkis alalim :)".to_string()
+    ];
+
+    let mut display = display::new_with_fields<Hero>( &publisher, keys, values, ctx);
+
+    display.update_version();
+
+    transfer::public_transfer(publisher, ctx.sender());
+    transfer::public_transfer(display, ctx.sender());
 }
 
-public fun mint(name: String, blob_id: String, ctx: &mut TxContext): Hero {
-    Hero {
+public entry fun mint(name: String, blob_id: String, ctx: &mut TxContext) {
+    let hero = Hero {
         id: object::new(ctx),
         name,
         blob_id,
-    }
+    };
+
+    transfer::public_transfer(hero, ctx.sender());
 }
 
 #[test_only]

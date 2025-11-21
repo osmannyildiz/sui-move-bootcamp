@@ -33,19 +33,29 @@ module package_upgrade::same_my_module {
     use sui::coin::Coin;
     use sui::sui::SUI;
 
+    const VERSION: u64 = 2;
+
+    const EDeprecated: u64 = 1;
+
     // @0xaaaaa::my_module::SharedBalancePool
     public struct SharedBalancePool has key {
         id: UID,
         balance: Balance<SUI>,
+        version: u64,
     }
 
     // @bbbbbb::my_module::important_function
     public fun important_function(pool: &mut SharedBalancePool): Coin<SUI> {
+        assert!(pool.version == VERSION, EDeprecated);
         std::debug::print(&pool.balance);
         // Code without the bug
         // Code without the bug
         // Code without the bug
         // Code without the bug
         abort(0)
+    }
+
+    public fun migrate(pool: &mut SharedBalancePool) {
+        pool.version = VERSION;
     }
 }

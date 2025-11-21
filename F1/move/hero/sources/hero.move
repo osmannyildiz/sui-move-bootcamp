@@ -38,6 +38,12 @@ public struct HeroRegistry has key {
 /// Creates a new HeroRegistry and shares it.
 fun init(ctx: &mut TxContext) {
     // Task 1: Create HeroRegistry object and make it shared
+    let registry = HeroRegistry {
+        id: object::new(ctx),
+        ids: vector[],
+        counter: 0,
+    };
+    transfer::share_object(registry);
 }
 
 /// Public functions.
@@ -50,16 +56,34 @@ public fun new_hero(
     stamina: u64,
     registry: &mut HeroRegistry,
     ctx: &mut TxContext,
-) {
+): Hero {
     // Task 2: Create Hero object
-    // Task 2.1: Update HeroRegistry
+    let hero = Hero {
+        id: object::new(ctx),
+        name,
+        stamina,
+        weapon: option::none(),
+    };
+
+    // Task 2.1: Update HeroRegistry (Hint: `registry.ids.push_back(...)` and `object::id(&hero)`)
+    // vector::push_back(&mut registry.ids, object::id(&hero));
+    registry.ids.push_back(object::id(&hero));
+
     // Task 2.2: Update HeroRegistry counter
+    registry.counter = registry.counter + 1;
+
     // Task 2.3: Return hero
+    hero
 }
 
 /// Receives a name and attack, creates a new Weapon, and returns it.
-public fun new_weapon(name: String, attack: u64, ctx: &mut TxContext) {
+public fun new_weapon(name: String, attack: u64, ctx: &mut TxContext): Weapon {
     // Task 3: Create a new weapon and return it
+    Weapon {
+        id: object::new(ctx),
+        name,
+        attack,
+    }
 }
 
 /// Receives a Hero and a Weapon, and equips the Weapon to the Hero.
@@ -69,19 +93,25 @@ public fun equip_weapon(hero: &mut Hero, weapon: Weapon) {
     // Task 4: Check if Hero has a weapon
     // Task 4.1: Hint: Check if empty by `option::is_none(&foo)`
     // Task 4.2: Use `EAlreadyEquipedWeapon` as error code
+    assert!(option::is_none(&hero.weapon), EAlreadyEquipedWeapon);
+
     // Task 4.3: Equip using `hero.weapon.fill(...)`
-    let Weapon { id, name: _, attack: _ } = weapon;
-    object::delete(id);
+    // option::fill(&mut hero.weapon, weapon);
+    hero.weapon.fill(weapon);
 }
 
 /// Receives a Hero, unequips the Weapon from the Hero, and returns the Weapon.
 /// If the Hero does not have a Weapon, it should abort with ENotEquipedWeapon.
-public fun unequip_weapon(hero: &mut Hero) {
+public fun unequip_weapon(hero: &mut Hero): Weapon {
     // Task 5: Check if Hero has a weapon
     // Task 5.1: Hint: Check if empty by `option::is_none(&foo)`
     // Task 5.2: Use `ENotEquipedWeapon` as error code
+    assert!(option::is_some(&hero.weapon), ENotEquipedWeapon);
+
     // Task 5.3: Return the weapon
     // Task 5.4: Hint: `hero.weapon.extract()`
+    // option::extract(&mut hero.weapon)
+    hero.weapon.extract()
 }
 
 /// Accessors.

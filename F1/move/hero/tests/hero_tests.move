@@ -23,7 +23,7 @@ fun test_init() {
     scenario.end();
 }
 
-/* #[test]
+#[test]
 fun test_new_hero() {
     let sender = @0xCAFE;
 
@@ -55,9 +55,9 @@ fun test_new_hero() {
     // End the scenario.
     test_utils::destroy(hero);
     scenario.end();
-} */
+}
 
-/* #[test]
+#[test]
 fun test_new_weapon() {
     let ctx = &mut tx_context::dummy();
     let weapon = hero::new_weapon(
@@ -68,9 +68,9 @@ fun test_new_weapon() {
     test_utils::assert_eq(hero::weapon_name(&weapon), utf8(b"Batmobile"));
     test_utils::assert_eq(hero::weapon_attack(&weapon), 100);
     test_utils::destroy(weapon);
-} */
+}
 
-/* #[test]
+#[test]
 fun test_equip_weapon() {
     let sender = @0xCAFE;
 
@@ -101,9 +101,9 @@ fun test_equip_weapon() {
     // End the scenario.
     test_utils::destroy(hero);
     scenario.end();
-} */
+}
 
-/* #[test]
+#[test]
 fun test_unequip_weapon() {
     let sender = @0xCAFE;
 
@@ -138,9 +138,9 @@ fun test_unequip_weapon() {
     test_utils::destroy(weapon);
     test_utils::destroy(hero);
     scenario.end();
-} */
+}
 
-/* #[test, expected_failure(abort_code = ::hero::hero::EAlreadyEquipedWeapon)]
+#[test, expected_failure(abort_code = ::hero::hero::EAlreadyEquipedWeapon)]
 fun test_equip_weapon_already_equiped() {
     let sender = @0xCAFE;
 
@@ -176,9 +176,9 @@ fun test_equip_weapon_already_equiped() {
     // End the scenario.
     test_utils::destroy(hero);
     scenario.end();
-} */
+}
 
-/* #[test, expected_failure(abort_code = ::hero::hero::ENotEquipedWeapon)]
+#[test, expected_failure(abort_code = ::hero::hero::ENotEquipedWeapon)]
 fun test_unequip_weapon_not_equiped() {
     let sender = @0xCAFE;
 
@@ -204,4 +204,4 @@ fun test_unequip_weapon_not_equiped() {
     test_utils::destroy(weapon);
     test_utils::destroy(hero);
     scenario.end();
-} */
+}
